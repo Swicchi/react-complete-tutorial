@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import Aux from '../../hoc/Aux';
+import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from 'axios';
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -36,13 +37,34 @@ class BurgerBuilder extends Component {
         this.setState({purchasing: true});
     };
 
-    purchaseCancelHandler = () =>{
+    purchaseCancelHandler = () => {
         this.setState({purchasing: false});
     };
 
-    purchaseContinueHandler = () =>{
-        alert('You continue!');
+    purchaseContinueHandler = () => {
+        const data = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice
+        };
+        axios.post('/burger', data)
+            .then(response => {
+                console.log(response.data);
+                alert("You should pay: $"+response.data.price.toFixed(1)+"");
+                this.setState({purchasing: false});
+            }).catch(error => {
+            console.log(error);
+            this.setState({purchasing: false});
+        });
     };
+
+    componentDidMount() {
+        axios.get('/burger')
+            .then(response => {
+                console.log(response.data);
+            }).catch(error => {
+            console.log(error);
+        });
+    }
 
     updatePurchaseState(ingredients) {
         const sum = Object.keys(ingredients)
