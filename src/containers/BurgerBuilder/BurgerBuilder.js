@@ -25,7 +25,7 @@ class BurgerBuilder extends Component {
 
     state = {
         ingredients: null,
-        totalPrice: 4,
+        totalPrice: 5.3,
         purchaseable: false,
         purchasing: false,
         loading: false,
@@ -54,7 +54,7 @@ class BurgerBuilder extends Component {
             console.log(error);
             this.setState({purchasing: false});
         });*/
-        this.setState({loading: true});
+       /* this.setState({loading: true});
         const order = {
             ingredients: this.state.ingredients,
             price: this.state.totalPrice,
@@ -75,7 +75,8 @@ class BurgerBuilder extends Component {
             })
             .catch(error => {
                 this.setState({loading: false, purchasing: false});
-            });
+            });*/
+       this.props.history.push("/checkout");
     };
 
     componentDidMount() {
