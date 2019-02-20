@@ -28,7 +28,7 @@ const input = (props) => {
             break;
     }
     let validationError = null;
-    if (props.invalid ) {
+    if (props.invalid && props.shouldValidate && props.touched) {
         validationError = <p>Please enter a valid value!</p>;
     }
 
