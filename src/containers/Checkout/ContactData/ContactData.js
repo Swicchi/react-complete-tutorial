@@ -172,7 +172,6 @@ class ContactData extends Component {
                               elementConfig={this.state.orderForm[key].elementConfig}
                               value={this.state.orderForm[key].value}
                               invalid={!this.state.orderForm[key].valid}
-                              shouldValidate={this.state.orderForm[key].validation}
                               touched={this.state.orderForm[key].touched}
                               changed={(event) => this.inputChangedHandler(event, key)}/>)
         }
