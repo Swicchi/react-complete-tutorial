@@ -5,6 +5,8 @@ import Input from '../../../components/UI/Input/Input';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactData.css';
 import {connect} from 'react-redux';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../../store/actions'
 
 class ContactData extends Component {
     state = {
@@ -131,20 +133,6 @@ class ContactData extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        /*const data = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice.toFixed(1)
-        };
-        axios.post('/burger', data)
-            .then(response => {
-                console.log(response.data);
-                alert("You should pay: $" + response.data.price + "");
-                this.setState({purchasing: false});
-            }).catch(error => {
-            console.log(error);
-            this.setState({purchasing: false});
-        });*/
-        this.setState({loading: true});
         const formData = {};
         for (let key in this.state.orderForm) {
             formData[key] = this.state.orderForm[key].value;
@@ -154,15 +142,7 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData
         };
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({loading: false});
-                this.props.history.push('/orders');
-            })
-            .catch(error => {
-                this.setState({loading: false});
-                console.log(error)
-            });
+        this.props.onOrderBurger(order);
     };
 
     render() {
@@ -201,4 +181,10 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = dispatch =>{
+  return {
+      onOrderBurger: (orderData) => dispatch(actions.purchaseBurgerStart(orderData))
+  }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps())(withErrorHandler(ContactData,axios));
