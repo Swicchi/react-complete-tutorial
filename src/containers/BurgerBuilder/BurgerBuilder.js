@@ -8,7 +8,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import {connect} from 'react-redux'
-import * as burgerBuilderActions from '../../store/actions';
+import * as actions from '../../store/actions';
 
 class BurgerBuilder extends Component {
     state = {
@@ -24,10 +24,11 @@ class BurgerBuilder extends Component {
     };
 
     purchaseContinueHandler = () => {
-       this.props.history.push({
-           pathname:'/checkout'
-         //  search:'?'+queryString
-       });
+        this.props.onInitPurchase();
+        this.props.history.push({
+            pathname: '/checkout'
+            //  search:'?'+queryString
+        });
     };
 
     componentDidMount() {
@@ -71,7 +72,7 @@ class BurgerBuilder extends Component {
         if (this.props.ing) {
             burger =
                 <Aux>
-                    <div style={{overflow:'scroll'}}>
+                    <div style={{overflow: 'scroll'}}>
                         <Burger ingredients={this.props.ing}/>
                     </div>
                     <BuildControls addIngredient={this.addIngredientHandler}
@@ -102,20 +103,21 @@ class BurgerBuilder extends Component {
     }
 }
 
-const mapStateToProps = state =>(
+const mapStateToProps = state => (
     {
-        ing:state.ingredients,
-        totalPrice:state.totalPrice,
-        error: state.error
+        ing: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error
     }
 );
 
-const mapDispatchToProps = dispatch =>(
+const mapDispatchToProps = dispatch => (
     {
-        onIngredientAdded:(name)=>dispatch(burgerBuilderActions.addIngredient(name)),
-        onIngredientRemoved:(name)=>dispatch(burgerBuilderActions.removeIngredient(name)),
-        onInitIngredient: () =>dispatch(burgerBuilderActions.initIngredient())
+        onIngredientAdded: (name) => dispatch(actions.addIngredient(name)),
+        onIngredientRemoved: (name) => dispatch(actions.removeIngredient(name)),
+        onInitIngredient: () => dispatch(actions.initIngredient()),
+        onInitPurchase: () => dispatch(actions.purchaseInit())
     }
 );
 
-export default connect(mapStateToProps,mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
